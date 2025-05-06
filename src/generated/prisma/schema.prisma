@@ -15,22 +15,51 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  username  String    @unique
-  email     String    @unique
-  password  String
-  avatar    String?
-  role      String    @default("user")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  sessions  Session[]
+  id                   String       @id @default(cuid())
+  email                String       @unique
+  username             String       @unique
+  password             String
+  avatar               String?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  sessions             Session[]
+  tournaments          Tournament[] @relation("TournamentParticipants")
+  organizedTournaments Tournament[] @relation("TournamentOrganizer")
 }
 
 model Session {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   userId    String
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Game {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  imageUrl    String?
+  tournaments Tournament[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Tournament {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  gameId          String
+  game            Game     @relation(fields: [gameId], references: [id])
+  organizerId     String
+  organizer       User     @relation("TournamentOrganizer", fields: [organizerId], references: [id])
+  participants    User[]   @relation("TournamentParticipants")
+  startDate       DateTime
+  endDate         DateTime
+  prizePool       Float?
+  maxParticipants Int?
+  status          String   @default("UPCOMING") // UPCOMING, ONGOING, COMPLETED, CANCELLED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

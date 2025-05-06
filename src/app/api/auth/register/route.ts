@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 // Input validation schema
 const registerSchema = z.object({
@@ -13,7 +13,9 @@ const registerSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    console.log('Register request received');
     const body = await request.json();
+    console.log('Request body:', { ...body, password: '[REDACTED]' });
     
     // Validate input
     const validatedData = registerSchema.parse(body);
@@ -29,6 +31,7 @@ export async function POST(request: Request) {
     });
 
     if (existingUser) {
+      console.log('User already exists:', existingUser.email === validatedData.email ? 'Email' : 'Username');
       return NextResponse.json(
         { error: existingUser.email === validatedData.email ? 'Email already registered' : 'Username already taken' },
         { status: 400 }
@@ -37,6 +40,7 @@ export async function POST(request: Request) {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
+    console.log('Password hashed successfully');
 
     // Create new user
     const newUser = await prisma.user.create({
@@ -46,6 +50,7 @@ export async function POST(request: Request) {
         password: hashedPassword,
       }
     });
+    console.log('User created successfully:', { id: newUser.id, email: newUser.email });
 
     // Generate JWT token
     const token = jwt.sign(
@@ -53,6 +58,7 @@ export async function POST(request: Request) {
       process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '7d' }
     );
+    console.log('JWT token generated successfully');
 
     // Create session
     await prisma.session.create({
@@ -62,6 +68,7 @@ export async function POST(request: Request) {
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
       }
     });
+    console.log('Session created successfully');
 
     // Return user data and token
     return NextResponse.json({
@@ -73,15 +80,29 @@ export async function POST(request: Request) {
         avatar: newUser.avatar,
       },
     });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
+  } catch (error: unknown) {
+    console.error('Registration error:', error);
+    
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      });
+      
+      if (error instanceof z.ZodError) {
+        return NextResponse.json(
+          { error: error.errors[0].message },
+          { status: 400 }
+        );
+      }
+      
       return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 }
+        { error: 'Internal server error', details: error.message },
+        { status: 500 }
       );
     }
     
-    console.error('Registration error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { prisma } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 // Input validation schema
 const loginSchema = z.object({
