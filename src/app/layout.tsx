@@ -15,13 +15,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} bg-gaming-dark text-white min-h-screen bg-cyber-grid bg-fixed`}>
-        <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen">
           <Header />
           <main className="flex-grow pt-16">
-            {children}
-          </main>
+        {children}
+            </main>
           <Footer />
-        </div>
+          </div>
       </body>
     </html>
   );
