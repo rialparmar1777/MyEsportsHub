@@ -13,7 +13,10 @@ import {
   FaInfoCircle,
   FaBars,
   FaTimes,
-  FaSearch
+  FaSearch,
+  FaDiscord,
+  FaTwitch,
+  FaYoutube
 } from 'react-icons/fa';
 
 const Header: React.FC = () => {
@@ -43,12 +46,58 @@ const Header: React.FC = () => {
   };
 
   const navLinks = [
-    { href: '/tournaments', icon: <FaTrophy />, label: 'Tournaments' },
-    { href: '/teams', icon: <FaUsers />, label: 'Teams' },
-    { href: '/players', icon: <FaUser />, label: 'Players' },
-    { href: '/news', icon: <FaNewspaper />, label: 'News' },
-    { href: '/live', icon: <FaVideo />, label: 'Live', className: 'text-gaming-neon-red hover:text-red-400' },
-    { href: '/about', icon: <FaInfoCircle />, label: 'About' },
+    { 
+      href: '/tournaments', 
+      icon: <FaTrophy />, 
+      label: 'Tournaments'
+    },
+    { 
+      href: '/teams', 
+      icon: <FaUsers />, 
+      label: 'Teams'
+    },
+    { 
+      href: '/players', 
+      icon: <FaUser />, 
+      label: 'Players'
+    },
+    { 
+      href: '/news', 
+      icon: <FaNewspaper />, 
+      label: 'News'
+    },
+    { 
+      href: '/live', 
+      icon: <FaVideo />, 
+      label: 'Live',
+      className: 'animate-pulse'
+    },
+    { 
+      href: '/about', 
+      icon: <FaInfoCircle />, 
+      label: 'About'
+    },
+  ];
+
+  const socialLinks = [
+    { 
+      href: 'https://discord.com', 
+      icon: <FaDiscord />, 
+      label: 'Discord', 
+      className: 'hover:text-gaming-neon-purple hover:scale-110'
+    },
+    { 
+      href: 'https://twitch.tv', 
+      icon: <FaTwitch />, 
+      label: 'Twitch', 
+      className: 'hover:text-gaming-neon-purple hover:scale-110'
+    },
+    { 
+      href: 'https://youtube.com', 
+      icon: <FaYoutube />, 
+      label: 'YouTube', 
+      className: 'hover:text-gaming-neon-red hover:scale-110'
+    },
   ];
 
   return (
@@ -63,9 +112,9 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
-            <FaGamepad className="text-2xl text-gaming-primary group-hover:text-gaming-neon-green transition-colors animate-neon-pulse" />
-            <span className="text-xl font-bold text-white group-hover:text-gaming-primary transition-colors">
-              My<span className="text-gaming-primary">Esports</span>
+            <FaGamepad className="text-2xl text-gaming-primary group-hover:text-gaming-neon-green transition-all duration-300 animate-neon-pulse group-hover:scale-110" />
+            <span className="text-xl font-bold text-white group-hover:text-gaming-primary transition-all duration-300">
+              My<span className="text-gaming-primary group-hover:text-gaming-neon-green transition-all duration-300">Esports</span>
             </span>
           </Link>
 
@@ -75,24 +124,41 @@ const Header: React.FC = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center space-x-1 transition-all duration-300 ${
-                  pathname === link.href
-                    ? 'text-gaming-primary border-b-2 border-gaming-primary'
-                    : 'text-white hover:text-gaming-primary'
-                } ${link.className || ''} hover:scale-105`}
+                className={`bricks-nav-menu-link relative flex items-center space-x-1 px-3 py-1.5 ${
+                  pathname === link.href ? 'text-gaming-primary' : 'text-white'
+                } ${link.className || ''}`}
               >
-                {link.icon}
-                <span>{link.label}</span>
+                <span className="relative flex items-center space-x-1">
+                  {link.icon}
+                  <span>{link.label}</span>
+                </span>
               </Link>
             ))}
           </nav>
 
-          {/* Search Section */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Right Section - Search and Social */}
+          <div className="hidden md:flex items-center space-x-6">
+            {/* Social Links */}
+            <div className="flex items-center space-x-4">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-gray-400 transition-all duration-300 ${link.className}`}
+                  title={link.label}
+                >
+                  {link.icon}
+                </a>
+              ))}
+            </div>
+
+            {/* Search Section */}
             <div className="relative">
               <button
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="text-white hover:text-gaming-primary transition-colors"
+                className="text-white hover:text-gaming-primary transition-all duration-300 hover:scale-110"
               >
                 <FaSearch className="text-xl" />
               </button>
@@ -112,7 +178,7 @@ const Header: React.FC = () => {
                     />
                     <button
                       type="submit"
-                      className="bg-gaming-primary px-3 py-1 rounded-r-md hover:bg-gaming-neon-green transition-colors text-gaming-dark font-semibold"
+                      className="bg-gaming-primary px-3 py-1 rounded-r-md hover:bg-gaming-neon-green transition-all duration-300 text-gaming-dark font-semibold hover:scale-105"
                     >
                       <FaSearch />
                     </button>
@@ -124,7 +190,7 @@ const Header: React.FC = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-white hover:text-gaming-primary focus:outline-none transition-colors"
+            className="md:hidden text-white hover:text-gaming-primary focus:outline-none transition-all duration-300 hover:scale-110"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
@@ -146,32 +212,78 @@ const Header: React.FC = () => {
                 />
                 <button
                   type="submit"
-                  className="bg-gaming-primary px-3 py-2 rounded-r-md hover:bg-gaming-neon-green transition-colors text-gaming-dark font-semibold"
+                  className="bg-gaming-primary px-3 py-2 rounded-r-md hover:bg-gaming-neon-green transition-all duration-300 text-gaming-dark font-semibold hover:scale-105"
                 >
                   <FaSearch />
                 </button>
               </div>
             </form>
 
+            {/* Mobile Navigation */}
             <nav className="flex flex-col space-y-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center space-x-2 transition-all duration-300 ${
-                    pathname === link.href
-                      ? 'text-gaming-primary'
-                      : 'text-white hover:text-gaming-primary'
-                  } ${link.className || ''} hover:scale-105`}
+                  className={`bricks-nav-menu-link relative flex items-center space-x-2 px-3 py-2 ${
+                    pathname === link.href ? 'text-gaming-primary' : 'text-white'
+                  } ${link.className || ''}`}
                 >
-                  {link.icon}
-                  <span>{link.label}</span>
+                  <span className="relative flex items-center space-x-2">
+                    {link.icon}
+                    <span>{link.label}</span>
+                  </span>
                 </Link>
               ))}
             </nav>
+
+            {/* Mobile Social Links */}
+            <div className="flex items-center space-x-4 mt-4 pt-4 border-t border-gaming-primary/20">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-gray-400 transition-all duration-300 ${link.className}`}
+                  title={link.label}
+                >
+                  {link.icon}
+                </a>
+              ))}
+            </div>
           </div>
         )}
       </div>
+
+      <style jsx global>{`
+        .bricks-nav-menu-link {
+          position: relative;
+          transition: all 0.3s ease-in-out;
+          border: solid 1px #ffffff;
+        }
+
+        .bricks-nav-menu-link::before {
+          content: "";
+          position: absolute;
+          background: #ffffff;
+          width: 0;
+          height: 100%;
+          left: 0;
+          top: 0;
+          z-index: -1;
+          transition: width 0.3s ease-in-out;
+        }
+
+        .bricks-nav-menu-link:hover {
+          color: #000;
+          z-index: 1;
+        }
+
+        .bricks-nav-menu-link:hover::before {
+          width: 100%;
+        }
+      `}</style>
     </header>
   );
 };
