@@ -143,6 +143,11 @@ const Footer: React.FC = () => {
               </Link>
             </div>
           </div>
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gaming-primary/60 font-medium">
+              Powered by <span className="text-gaming-primary">Rial</span>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
