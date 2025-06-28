@@ -1,0 +1,251 @@
+'use client';
+
+import { FaGamepad, FaTrophy, FaUsers, FaNewspaper, FaVideo, FaArrowRight } from 'react-icons/fa';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-gaming-dark">
+      {/* Hero Section - Full Screen */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 bg-cyber-grid opacity-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gaming-dark/60 via-gaming-dark/40 to-gaming-dark/60" />
+        
+        <div className="container mx-auto px-4 relative z-20 text-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-6xl md:text-8xl font-bold mb-8 text-white"
+          >
+            Welcome to <span className="text-gaming-primary neon-text">MyEsports</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-2xl md:text-3xl text-white mb-12 max-w-4xl mx-auto"
+          >
+            Your premier destination for competitive gaming tournaments, team management, and esports community.
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-wrap justify-center gap-6"
+          >
+            <Link 
+              href="/tournaments" 
+              className="bg-gaming-primary text-gaming-dark px-10 py-4 rounded-lg font-bold text-xl hover:bg-gaming-neon-green transition-all duration-300 transform hover:scale-105 glow"
+            >
+              Join Tournament
+            </Link>
+            <Link 
+              href="/teams" 
+              className="border-2 border-gaming-primary text-gaming-primary px-10 py-4 rounded-lg font-bold text-xl hover:bg-gaming-primary hover:text-gaming-dark transition-all duration-300 transform hover:scale-105"
+            >
+              Create Team
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Featured Tournaments */}
+      <section className="py-24 bg-gaming-darker">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-12">
+            <motion.h2 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl font-bold text-gaming-primary flex items-center gap-3"
+            >
+              <FaTrophy className="animate-neon-pulse text-5xl" />
+              Featured Tournaments
+            </motion.h2>
+            <Link 
+              href="/tournaments" 
+              className="text-gaming-primary hover:text-gaming-neon-green transition-colors flex items-center gap-2 text-xl"
+            >
+              View All <FaArrowRight />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Dota 2 Championship",
+                image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80",
+                prize: "$50,000",
+                game: "Dota 2"
+              },
+              {
+                title: "CS:GO Masters",
+                image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&q=80",
+                prize: "$30,000",
+                game: "Counter-Strike 2"
+              },
+              {
+                title: "Valorant Pro League",
+                image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80",
+                prize: "$25,000",
+                game: "Valorant"
+              }
+            ].map((tournament, index) => (
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="bg-gaming-light rounded-xl overflow-hidden border-2 border-gaming-primary/20 hover:border-gaming-primary transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                <div className="h-64 bg-gaming-dark relative">
+                  <Image
+                    src={tournament.image}
+                    alt={tournament.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gaming-dark to-transparent" />
+                </div>
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold mb-3 text-white">{tournament.title}</h3>
+                  <p className="text-gray-300 text-lg mb-4">Prize Pool: {tournament.prize}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gaming-primary font-semibold">{tournament.game}</span>
+                    <Link 
+                      href={`/tournaments/${index + 1}`}
+                      className="text-gaming-primary hover:text-gaming-neon-green transition-colors text-lg"
+                    >
+                      Learn More →
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Live Streams */}
+      <section className="py-24 bg-gaming-dark">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-12">
+            <motion.h2 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl font-bold text-gaming-neon-red flex items-center gap-3"
+            >
+              <FaVideo className="animate-neon-pulse text-5xl" />
+              Live Streams
+            </motion.h2>
+            <Link 
+              href="/live" 
+              className="text-gaming-neon-red hover:text-red-400 transition-colors flex items-center gap-2 text-xl"
+            >
+              View All <FaArrowRight />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                title: "Pro Gamer Stream",
+                image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80",
+                viewers: "2.5K"
+              },
+              {
+                title: "Tournament Finals",
+                image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&q=80",
+                viewers: "1.8K"
+              },
+              {
+                title: "Team Practice",
+                image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80",
+                viewers: "950"
+              },
+              {
+                title: "Community Night",
+                image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&q=80",
+                viewers: "1.2K"
+              }
+            ].map((stream, index) => (
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="bg-gaming-light rounded-xl overflow-hidden border-2 border-gaming-neon-red/20 hover:border-gaming-neon-red transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                <div className="relative">
+                  <div className="h-48 bg-gaming-dark relative">
+                    <Image
+                      src={stream.image}
+                      alt={stream.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="absolute top-3 left-3 bg-gaming-neon-red text-gaming-dark px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                    LIVE
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="font-bold text-xl mb-2 text-white">{stream.title}</h3>
+                  <p className="text-gray-300">Viewer Count: {stream.viewers}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-24 bg-gaming-darker relative overflow-hidden">
+        <div className="absolute inset-0 bg-cyber-grid opacity-10" />
+        <div className="container mx-auto px-4 relative z-10 text-center">
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl font-bold mb-8 text-gaming-primary"
+          >
+            Ready to Compete?
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-2xl text-gray-300 mb-12 max-w-3xl mx-auto"
+          >
+            Join thousands of players and teams competing in tournaments across multiple games.
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-wrap justify-center gap-6"
+          >
+            <Link 
+              href="/register" 
+              className="bg-gaming-primary text-gaming-dark px-12 py-5 rounded-lg font-bold text-xl hover:bg-gaming-neon-green transition-all duration-300 transform hover:scale-105 glow"
+            >
+              Get Started
+            </Link>
+            <Link 
+              href="/about" 
+              className="border-2 border-gaming-primary text-gaming-primary px-12 py-5 rounded-lg font-bold text-xl hover:bg-gaming-primary hover:text-gaming-dark transition-all duration-300 transform hover:scale-105"
+            >
+              Learn More
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+    </main>
+  );
+}
