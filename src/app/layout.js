@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
       <body className={`${inter.className} bg-gaming-dark text-white min-h-screen bg-cyber-grid bg-fixed`}>
         <div className="flex flex-col min-h-screen">
           <Navbar />
-          <main className="flex-grow pt-16">
+          <main className="flex-grow pt-20">
             {children}
           </main>
         </div>
