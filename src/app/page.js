@@ -478,30 +478,54 @@ export default function Home() {
               {
                 title: "Pro Gamer Stream",
                 image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80",
-                viewers: "2.5K",
+                viewers: 2500,
                 game: "Dota 2",
-                streamer: "ProGamer123"
+                streamer: "ProGamer123",
+                streamerAvatar: "https://randomuser.me/api/portraits/men/11.jpg",
+                topViewers: [
+                  "https://randomuser.me/api/portraits/men/21.jpg",
+                  "https://randomuser.me/api/portraits/women/22.jpg",
+                  "https://randomuser.me/api/portraits/men/23.jpg"
+                ]
               },
               {
                 title: "Tournament Finals",
                 image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&q=80",
-                viewers: "1.8K",
+                viewers: 1800,
                 game: "CS:GO",
-                streamer: "TournamentTV"
+                streamer: "TournamentTV",
+                streamerAvatar: "https://randomuser.me/api/portraits/men/31.jpg",
+                topViewers: [
+                  "https://randomuser.me/api/portraits/men/41.jpg",
+                  "https://randomuser.me/api/portraits/women/42.jpg",
+                  "https://randomuser.me/api/portraits/men/43.jpg"
+                ]
               },
               {
                 title: "Team Practice",
                 image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80",
-                viewers: "950",
+                viewers: 950,
                 game: "Valorant",
-                streamer: "TeamAlpha"
+                streamer: "TeamAlpha",
+                streamerAvatar: "https://randomuser.me/api/portraits/men/51.jpg",
+                topViewers: [
+                  "https://randomuser.me/api/portraits/men/61.jpg",
+                  "https://randomuser.me/api/portraits/women/62.jpg",
+                  "https://randomuser.me/api/portraits/men/63.jpg"
+                ]
               },
               {
                 title: "Community Night",
                 image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&q=80",
-                viewers: "1.2K",
+                viewers: 1200,
                 game: "League of Legends",
-                streamer: "CommunityGaming"
+                streamer: "CommunityGaming",
+                streamerAvatar: "https://randomuser.me/api/portraits/men/71.jpg",
+                topViewers: [
+                  "https://randomuser.me/api/portraits/men/81.jpg",
+                  "https://randomuser.me/api/portraits/women/82.jpg",
+                  "https://randomuser.me/api/portraits/men/83.jpg"
+                ]
               }
             ].map((stream, index) => (
               <motion.div 
@@ -509,7 +533,8 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group bg-gaming-light rounded-2xl overflow-hidden border-2 border-gaming-neon-red/20 hover:border-gaming-neon-red transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-gaming-neon-red/10 hover:shadow-gaming-neon-red/30"
+                className="group bg-gaming-light rounded-2xl overflow-hidden border-2 border-gaming-neon-red/20 hover:border-gaming-neon-red transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-gaming-neon-red/10 hover:shadow-gaming-neon-red/30 relative"
+                style={{ boxShadow: '0 0 24px 0 #ff313133' }}
               >
                 <div className="relative">
                   <div className="h-48 bg-gaming-dark relative overflow-hidden">
@@ -525,22 +550,43 @@ export default function Home() {
                   <div className="absolute top-3 left-3 bg-gaming-neon-red text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg animate-pulse">
                     LIVE
                   </div>
-                  <div className="absolute top-3 right-3 bg-gaming-dark/80 text-white px-2 py-1 rounded text-xs font-semibold">
-                    {stream.viewers} viewers
+                  <div className="absolute top-3 right-3 flex items-center gap-2">
+                    <span className="bg-gaming-neon-green text-gaming-dark px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                      <LiveNumber value={stream.viewers} suffix=" viewers" />
+                    </span>
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="font-bold text-xl mb-2 text-white group-hover:text-gaming-neon-red transition-colors duration-300 line-clamp-2">
-                    {stream.title}
-                  </h3>
+                  <div className="flex items-center mb-4">
+                    <img src={stream.streamerAvatar} alt="streamer avatar" className="w-12 h-12 rounded-full border-2 border-gaming-neon-red shadow-md mr-3" />
+                    <div>
+                      <h3 className="font-bold text-xl mb-1 text-white group-hover:text-gaming-neon-red transition-colors duration-300 line-clamp-2">
+                        {stream.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm">Streamer: <span className="text-gaming-primary">{stream.streamer}</span></p>
+                    </div>
+                  </div>
                   <div className="space-y-2 mb-4">
-                    <p className="text-gray-400 text-sm">Streamer: <span className="text-gaming-primary">{stream.streamer}</span></p>
                     <p className="text-gray-400 text-sm">Game: <span className="text-gaming-neon-green">{stream.game}</span></p>
+                  </div>
+                  {/* Top viewers/players avatars */}
+                  <div className="flex items-center mb-4">
+                    {stream.topViewers.map((avatar, i) => (
+                      <img
+                        key={i}
+                        src={avatar}
+                        alt="viewer avatar"
+                        className="w-8 h-8 rounded-full border-2 border-gaming-primary -ml-2 first:ml-0 shadow-md hover:scale-110 transition-transform duration-200"
+                      />
+                    ))}
+                    <span className="ml-4 text-gray-400 text-xs">Top Viewers</span>
                   </div>
                   <button className="w-full bg-gaming-neon-red text-white py-2 rounded-lg font-bold hover:bg-red-600 transition-all duration-300 hover:scale-105 shadow-lg">
                     Watch Now
                   </button>
                 </div>
+                {/* Animated border glow on hover */}
+                <div className="pointer-events-none absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-gaming-neon-red group-hover:shadow-[0_0_32px_8px_#ff3131] transition-all duration-300" />
               </motion.div>
             ))}
           </div>
