@@ -172,7 +172,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -370,17 +370,17 @@ export default function Home() {
                       <span className="text-gray-400">Players:</span>
                       <span className="text-white font-semibold">{tournament.players}</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center">
                       <span className="text-gray-400">Game:</span>
-                      <span className="text-gaming-primary font-semibold">{tournament.game}</span>
+                    <span className="text-gaming-primary font-semibold">{tournament.game}</span>
                     </div>
                   </div>
-                  <Link 
-                    href={`/tournaments/${index + 1}`}
+                    <Link 
+                      href={`/tournaments/${index + 1}`}
                     className="block w-full bg-gradient-to-r from-gaming-primary to-gaming-neon-green text-gaming-dark text-center py-3 rounded-lg font-bold hover:scale-105 transition-all duration-300 shadow-lg shadow-gaming-primary/30"
-                  >
+                    >
                     Join Tournament
-                  </Link>
+                    </Link>
                 </div>
               </motion.div>
             ))}
@@ -505,18 +505,18 @@ export default function Home() {
               Join thousands of players competing for glory, fame, and massive prize pools. Your journey to becoming a gaming legend starts here.
             </p>
             <div className="flex flex-wrap justify-center gap-6">
-              <Link 
-                href="/register" 
+            <Link 
+              href="/register" 
                 className="bg-gaming-dark text-gaming-primary px-12 py-5 rounded-full font-bold text-2xl hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-gaming-dark/50"
-              >
+            >
                 Get Started Now
-              </Link>
-              <Link 
+            </Link>
+            <Link 
                 href="/tournaments" 
                 className="border-4 border-gaming-dark text-gaming-dark px-12 py-5 rounded-full font-bold text-2xl hover:bg-gaming-dark hover:text-gaming-primary transition-all duration-300"
-              >
+            >
                 Browse Tournaments
-              </Link>
+            </Link>
             </div>
           </motion.div>
         </div>
