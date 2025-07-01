@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import VideoBackground from '@/components/VideoBackground';
+import LiveNumber from '@/components/LiveNumber';
 
 export default function Home() {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -249,10 +250,10 @@ export default function Home() {
             className="grid grid-cols-2 md:grid-cols-4 gap-8"
           >
             {[
-              { number: "50K+", label: "Active Players", icon: <FaUsers />, color: "text-gaming-primary" },
-              { number: "500+", label: "Tournaments", icon: <FaTrophy />, color: "text-gaming-neon-green" },
-              { number: "2M+", label: "Prize Pool", icon: <FaCrown />, color: "text-gaming-neon-red" },
-              { number: "24/7", label: "Live Streams", icon: <FaVideo />, color: "text-gaming-neon-purple" }
+              { number: "50K", label: "Active Players", icon: <FaUsers />, color: "text-gaming-primary", suffix: "+" },
+              { number: "500", label: "Tournaments", icon: <FaTrophy />, color: "text-gaming-neon-green", suffix: "+" },
+              { number: "2M", label: "Prize Pool", icon: <FaCrown />, color: "text-gaming-neon-red", suffix: "+" },
+              { number: "24/7", label: "Live Streams", icon: <FaVideo />, color: "text-gaming-neon-purple", isStatic: true }
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -265,7 +266,9 @@ export default function Home() {
                   {stat.icon}
                 </div>
                 <div className="text-4xl md:text-5xl font-black text-white mb-2 group-hover:scale-110 transition-transform duration-300">
-                  {stat.number}
+                  {stat.isStatic
+                    ? stat.number
+                    : <LiveNumber value={stat.number} suffix={stat.suffix} />}
                 </div>
                 <div className="text-gray-400 text-lg font-semibold">
                   {stat.label}
@@ -308,29 +311,53 @@ export default function Home() {
               {
                 title: "Dota 2 World Championship",
                 image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80",
-                prize: "$100,000",
+                prize: 100000,
                 game: "Dota 2",
-                players: "256",
+                players: 256,
+                maxPlayers: 256,
+                spotsLeft: 12,
                 status: "Registration Open",
-                difficulty: "Professional"
+                difficulty: "Professional",
+                timeLeft: "2d 5h left",
+                avatars: [
+                  "https://randomuser.me/api/portraits/men/32.jpg",
+                  "https://randomuser.me/api/portraits/women/44.jpg",
+                  "https://randomuser.me/api/portraits/men/45.jpg"
+                ]
               },
               {
                 title: "CS:GO Masters League",
                 image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&q=80",
-                prize: "$75,000",
+                prize: 75000,
                 game: "Counter-Strike 2",
-                players: "128",
+                players: 128,
+                maxPlayers: 128,
+                spotsLeft: 0,
                 status: "Live Now",
-                difficulty: "Advanced"
+                difficulty: "Advanced",
+                timeLeft: "Live",
+                avatars: [
+                  "https://randomuser.me/api/portraits/men/12.jpg",
+                  "https://randomuser.me/api/portraits/women/22.jpg",
+                  "https://randomuser.me/api/portraits/men/23.jpg"
+                ]
               },
               {
                 title: "Valorant Pro Circuit",
                 image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80",
-                prize: "$50,000",
+                prize: 50000,
                 game: "Valorant",
-                players: "64",
+                players: 64,
+                maxPlayers: 128,
+                spotsLeft: 64,
                 status: "Starting Soon",
-                difficulty: "Intermediate"
+                difficulty: "Intermediate",
+                timeLeft: "5h 30m left",
+                avatars: [
+                  "https://randomuser.me/api/portraits/men/52.jpg",
+                  "https://randomuser.me/api/portraits/women/53.jpg",
+                  "https://randomuser.me/api/portraits/men/54.jpg"
+                ]
               }
             ].map((tournament, index) => (
               <motion.div 
@@ -338,7 +365,8 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group bg-gaming-light rounded-2xl overflow-hidden border-2 border-gaming-primary/20 hover:border-gaming-primary transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-gaming-primary/10 hover:shadow-gaming-primary/30"
+                className="group bg-gaming-light rounded-2xl overflow-hidden border-2 border-gaming-primary/20 hover:border-gaming-primary transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-gaming-primary/10 hover:shadow-gaming-primary/30 relative"
+                style={{ boxShadow: '0 0 24px 0 #00ff0033' }}
               >
                 <div className="h-64 bg-gaming-dark relative overflow-hidden">
                   <Image
@@ -350,11 +378,15 @@ export default function Home() {
                     priority={index === 0}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-gaming-dark via-gaming-dark/50 to-transparent" />
-                  <div className="absolute top-4 left-4 bg-gaming-primary text-gaming-dark px-3 py-1 rounded-full text-sm font-bold">
-                    {tournament.status}
+                  <div className="absolute top-4 left-4 flex flex-col gap-2">
+                    <span className="bg-gaming-primary text-gaming-dark px-3 py-1 rounded-full text-xs font-bold shadow-lg">{tournament.status}</span>
+                    <span className="bg-gaming-neon-red text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">{tournament.difficulty}</span>
                   </div>
-                  <div className="absolute top-4 right-4 bg-gaming-neon-red text-white px-3 py-1 rounded-full text-sm font-bold">
-                    {tournament.difficulty}
+                  <div className="absolute top-4 right-4 flex flex-col gap-2 items-end">
+                    <span className="bg-gaming-neon-green text-gaming-dark px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">{tournament.timeLeft}</span>
+                    {tournament.spotsLeft > 0 && (
+                      <span className="bg-gaming-neon-blue text-gaming-dark px-3 py-1 rounded-full text-xs font-bold shadow-lg">{tournament.spotsLeft} spots left</span>
+                    )}
                   </div>
                 </div>
                 <div className="p-8">
@@ -364,24 +396,50 @@ export default function Home() {
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Prize Pool:</span>
-                      <span className="text-gaming-neon-green font-bold text-xl">{tournament.prize}</span>
+                      <span className="text-gaming-neon-green font-bold text-xl">
+                        <LiveNumber value={tournament.prize} suffix="$" />
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400">Players:</span>
-                      <span className="text-white font-semibold">{tournament.players}</span>
+                      <span className="text-white font-semibold">
+                        <LiveNumber value={tournament.players} suffix={`/${tournament.maxPlayers}`} />
+                      </span>
                     </div>
-                  <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center">
                       <span className="text-gray-400">Game:</span>
-                    <span className="text-gaming-primary font-semibold">{tournament.game}</span>
+                      <span className="text-gaming-primary font-semibold">{tournament.game}</span>
                     </div>
                   </div>
+                  {/* Avatars */}
+                  <div className="flex items-center mb-6">
+                    {tournament.avatars.map((avatar, i) => (
+                      <img
+                        key={i}
+                        src={avatar}
+                        alt="avatar"
+                        className="w-10 h-10 rounded-full border-2 border-gaming-primary -ml-2 first:ml-0 shadow-md hover:scale-110 transition-transform duration-200"
+                      />
+                    ))}
+                    <span className="ml-4 text-gray-400 text-sm">Top Teams</span>
+                  </div>
+                  <div className="flex gap-4">
                     <Link 
                       href={`/tournaments/${index + 1}`}
-                    className="block w-full bg-gradient-to-r from-gaming-primary to-gaming-neon-green text-gaming-dark text-center py-3 rounded-lg font-bold hover:scale-105 transition-all duration-300 shadow-lg shadow-gaming-primary/30"
+                      className="flex-1 bg-gradient-to-r from-gaming-primary to-gaming-neon-green text-gaming-dark text-center py-3 rounded-lg font-bold hover:scale-105 transition-all duration-300 shadow-lg shadow-gaming-primary/30"
                     >
-                    Join Tournament
+                      Join Tournament
                     </Link>
+                    <Link 
+                      href={`/tournaments/${index + 1}`}
+                      className="flex-1 border-2 border-gaming-primary text-gaming-primary text-center py-3 rounded-lg font-bold hover:bg-gaming-primary hover:text-gaming-dark transition-all duration-300 shadow-lg"
+                    >
+                      View Details
+                    </Link>
+                  </div>
                 </div>
+                {/* Animated border glow on hover */}
+                <div className="pointer-events-none absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-gaming-neon-green group-hover:shadow-[0_0_32px_8px_#39ff14] transition-all duration-300" />
               </motion.div>
             ))}
           </div>
