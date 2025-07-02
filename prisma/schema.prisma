@@ -50,11 +50,15 @@ model Tournament {
   maxTeams    Int
   status      String   @default("upcoming") // upcoming, ongoing, completed
   image       String?
+  region      String   @default("Global")
+  streamUrl   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
   // Relations
   participants TournamentParticipant[]
+  matches     Match[]
+  brackets    Bracket[]
 }
 
 model TournamentParticipant {
@@ -76,12 +80,15 @@ model Team {
   name        String   @unique
   description String?
   logo        String?
+  region      String   @default("Global")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
   // Relations
   members     TeamMember[]
   tournaments TournamentParticipant[]
+  homeMatches Match[]  @relation("HomeTeam")
+  awayMatches Match[]  @relation("AwayTeam")
 }
 
 model TeamMember {
@@ -95,4 +102,40 @@ model TeamMember {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@unique([teamId, userId])
+}
+
+model Match {
+  id           String   @id @default(uuid())
+  tournamentId String
+  homeTeamId   String
+  awayTeamId   String
+  homeScore    Int      @default(0)
+  awayScore    Int      @default(0)
+  status       String   @default("scheduled") // scheduled, live, completed
+  startTime    DateTime
+  endTime      DateTime?
+  round        String   // e.g., "Quarter Finals", "Semi Finals", "Finals"
+  bracketId    String?
+  streamUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  homeTeam     Team       @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam     Team       @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  bracket      Bracket?   @relation(fields: [bracketId], references: [id])
+}
+
+model Bracket {
+  id           String   @id @default(uuid())
+  tournamentId String
+  name         String   // e.g., "Upper Bracket", "Lower Bracket", "Finals"
+  type         String   // single_elimination, double_elimination, round_robin
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  matches      Match[]
 }
