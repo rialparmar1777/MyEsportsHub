@@ -12,6 +12,7 @@ module.exports = {
         'gaming-darker': '#050505',
         'gaming-light': '#1a1a1a',
         'gaming-primary': '#00ff00',
+        'gaming-secondary': '#00ccff',
         'gaming-neon-green': '#39ff14',
         'gaming-neon-red': '#ff3131',
         'gaming-neon-blue': '#00ffff',

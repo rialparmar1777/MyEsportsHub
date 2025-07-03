@@ -3,98 +3,35 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-
-// Mock data - replace with actual API calls
-const mockTournament = {
-  id: '1',
-  title: 'Valorant Champions 2024',
-  game: 'valorant',
-  prizePool: '$2,000,000',
-  startDate: '2024-12-15T10:00:00Z',
-  endDate: '2024-12-22T18:00:00Z',
-  status: 'ongoing',
-  region: 'Global',
-  image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=400&fit=crop',
-  participants: 16,
-  maxTeams: 16,
-  description: 'The biggest Valorant tournament of the year featuring the world\'s best teams competing for the ultimate championship title.',
-  streamUrl: 'https://www.twitch.tv/valorant',
-  teams: [
-    { id: '1', name: 'Team Liquid', logo: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=60&h=60&fit=crop', region: 'NA', wins: 3, losses: 1 },
-    { id: '2', name: 'Fnatic', logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=60&h=60&fit=crop', region: 'EU', wins: 4, losses: 0 },
-    { id: '3', name: 'Sentinels', logo: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=60&h=60&fit=crop', region: 'NA', wins: 2, losses: 2 },
-    { id: '4', name: 'G2 Esports', logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=60&h=60&fit=crop', region: 'EU', wins: 3, losses: 1 },
-    { id: '5', name: 'Cloud9', logo: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=60&h=60&fit=crop', region: 'NA', wins: 1, losses: 3 },
-    { id: '6', name: 'Team Heretics', logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=60&h=60&fit=crop', region: 'EU', wins: 2, losses: 2 },
-    { id: '7', name: 'NRG Esports', logo: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=60&h=60&fit=crop', region: 'NA', wins: 0, losses: 4 },
-    { id: '8', name: 'Vitality', logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=60&h=60&fit=crop', region: 'EU', wins: 1, losses: 3 }
-  ],
-  matches: [
-    {
-      id: '1',
-      homeTeam: { id: '1', name: 'Team Liquid', logo: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=40&h=40&fit=crop' },
-      awayTeam: { id: '2', name: 'Fnatic', logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=40&h=40&fit=crop' },
-      homeScore: 13,
-      awayScore: 16,
-      status: 'completed',
-      startTime: '2024-12-15T10:00:00Z',
-      round: 'Group Stage',
-      streamUrl: 'https://www.twitch.tv/valorant'
-    },
-    {
-      id: '2',
-      homeTeam: { id: '3', name: 'Sentinels', logo: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=40&h=40&fit=crop' },
-      awayTeam: { id: '4', name: 'G2 Esports', logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=40&h=40&fit=crop' },
-      homeScore: 14,
-      awayScore: 12,
-      status: 'completed',
-      startTime: '2024-12-15T14:00:00Z',
-      round: 'Group Stage',
-      streamUrl: 'https://www.twitch.tv/valorant'
-    },
-    {
-      id: '3',
-      homeTeam: { id: '1', name: 'Team Liquid', logo: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=40&h=40&fit=crop' },
-      awayTeam: { id: '3', name: 'Sentinels', logo: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=40&h=40&fit=crop' },
-      homeScore: 8,
-      awayScore: 6,
-      status: 'live',
-      startTime: '2024-12-16T10:00:00Z',
-      round: 'Quarter Finals',
-      streamUrl: 'https://www.twitch.tv/valorant'
-    },
-    {
-      id: '4',
-      homeTeam: { id: '2', name: 'Fnatic', logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=40&h=40&fit=crop' },
-      awayTeam: { id: '4', name: 'G2 Esports', logo: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=40&h=40&fit=crop' },
-      homeScore: 0,
-      awayScore: 0,
-      status: 'scheduled',
-      startTime: '2024-12-16T14:00:00Z',
-      round: 'Quarter Finals',
-      streamUrl: 'https://www.twitch.tv/valorant'
-    }
-  ],
-  brackets: [
-    {
-      id: '1',
-      name: 'Upper Bracket',
-      type: 'single_elimination',
-      matches: [
-        { id: '1', homeTeam: 'Team Liquid', awayTeam: 'Fnatic', winner: 'Fnatic' },
-        { id: '2', homeTeam: 'Sentinels', awayTeam: 'G2 Esports', winner: 'Sentinels' },
-        { id: '3', homeTeam: 'Cloud9', awayTeam: 'Team Heretics', winner: 'Team Heretics' },
-        { id: '4', homeTeam: 'NRG Esports', awayTeam: 'Vitality', winner: 'Vitality' }
-      ]
-    }
-  ]
-};
+import { tournamentData, getGameIcon, getGameName } from '@/lib/tournamentData';
+import { getGameImage, fallbackImages } from '@/lib/getGameImage';
 
 export default function TournamentDetailsPage() {
   const params = useParams();
-  const [tournament, setTournament] = useState(mockTournament);
+  const [tournament, setTournament] = useState(null);
+  const [tournamentImage, setTournamentImage] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [liveScore, setLiveScore] = useState({ home: 8, away: 6 });
+  const [loading, setLoading] = useState(true);
+
+  // Load tournament data based on ID
+  useEffect(() => {
+    const tournamentId = params.id;
+    const tournament = tournamentData[tournamentId];
+    
+    if (tournament) {
+      setTournament(tournament);
+      
+      // Fetch game-specific image
+      getGameImage(tournament.game).then(imageUrl => {
+        setTournamentImage(imageUrl || fallbackImages[tournament.game]);
+      }).catch(() => {
+        setTournamentImage(fallbackImages[tournament.game]);
+      });
+    }
+    
+    setLoading(false);
+  }, [params.id]);
 
   // Simulate live score updates
   useEffect(() => {
@@ -161,11 +98,53 @@ export default function TournamentDetailsPage() {
     { id: 'stream', name: 'Live Stream', icon: '📺' }
   ];
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gaming-dark text-white">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gaming-primary mx-auto mb-4"></div>
+          <p className="text-gaming-primary text-xl">Loading tournament...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!tournament) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gaming-dark text-white">
+        <div className="text-center">
+          <div className="text-6xl mb-4">❌</div>
+          <h1 className="text-2xl font-bold mb-2">Tournament Not Found</h1>
+          <p className="text-gray-400">The tournament you're looking for doesn't exist.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gaming-dark">
       {/* Hero Section */}
-      <div className="relative h-96 bg-gradient-to-br from-gaming-primary/20 to-gaming-secondary/20">
-        <div className="absolute inset-0 bg-black/50"></div>
+      <div className="relative h-96 overflow-hidden">
+        {/* Dynamic Background */}
+        {tournamentImage ? (
+          <div className="absolute inset-0">
+            <img 
+              src={tournamentImage} 
+              alt={tournament.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                console.log('Tournament background failed to load:', tournamentImage);
+                e.target.style.display = 'none';
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-gaming-primary/30 to-gaming-secondary/30"></div>
+            <div className="absolute inset-0 bg-black/60"></div>
+          </div>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-gaming-primary/20 to-gaming-secondary/20">
+            <div className="absolute inset-0 bg-black/50"></div>
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-gaming-dark via-transparent to-transparent"></div>
         
         <div className="relative h-full flex items-end">
@@ -190,8 +169,8 @@ export default function TournamentDetailsPage() {
                 
                 <div className="flex items-center gap-6 text-sm text-gray-300">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">🎯</span>
-                    <span>Valorant</span>
+                    <span className="text-2xl">{getGameIcon(tournament.game)}</span>
+                    <span>{getGameName(tournament.game)}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">🌍</span>
