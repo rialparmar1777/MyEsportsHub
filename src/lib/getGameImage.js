@@ -1,5 +1,10 @@
 export async function getGameImage(game) {
-  const accessKey = process.env.UNSPLASH_ACCESS_KEY;
+  const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
+  
+  if (!accessKey) {
+    console.error('Unsplash access key not found in environment variables');
+    return null;
+  }
   
   // Enhanced query map with more specific and relevant search terms
   const queryMap = {
@@ -12,25 +17,30 @@ export async function getGameImage(game) {
   };
   
   const query = queryMap[game] || "esports tournament";
+  const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&orientation=landscape&per_page=5&client_id=${accessKey}`;
+  
+  console.log(`Fetching from Unsplash: ${url}`);
 
   try {
-    const res = await fetch(
-      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&orientation=landscape&per_page=5&client_id=${accessKey}`
-    );
+    const res = await fetch(url);
     
     if (!res.ok) {
-      console.error(`Unsplash API error: ${res.status}`);
+      console.error(`Unsplash API error: ${res.status} - ${res.statusText}`);
       return null;
     }
     
     const data = await res.json();
+    console.log(`Unsplash response for ${game}:`, data);
     
     if (data.results && data.results.length > 0) {
       // Return the highest quality image available
       const image = data.results[0];
-      return image.urls.regular || image.urls.small;
+      const imageUrl = image.urls.regular || image.urls.small;
+      console.log(`Selected image URL for ${game}:`, imageUrl);
+      return imageUrl;
     }
     
+    console.log(`No images found for ${game}`);
     return null;
   } catch (error) {
     console.error('Error fetching image from Unsplash:', error);

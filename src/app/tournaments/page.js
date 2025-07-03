@@ -129,13 +129,20 @@ export default function TournamentsPage() {
   useEffect(() => {
     async function fetchImages() {
       setLoadingImages(true);
+      console.log('Starting to fetch images...');
+      
       try {
         const updated = await Promise.all(
           mockTournaments.map(async (t) => {
             try {
+              console.log(`Fetching image for ${t.game}...`);
               const img = await getGameImage(t.game);
-              // Use API image if available, otherwise use fallback, then original
-              const finalImage = img || fallbackImages[t.game] || t.image;
+              console.log(`Image result for ${t.game}:`, img);
+              
+              // Use API image if available, otherwise use fallback
+              const finalImage = img || fallbackImages[t.game];
+              console.log(`Final image for ${t.game}:`, finalImage);
+              
               return { 
                 ...t, 
                 image: finalImage
@@ -144,11 +151,13 @@ export default function TournamentsPage() {
               console.error(`Error fetching image for ${t.game}:`, error);
               return { 
                 ...t, 
-                image: fallbackImages[t.game] || t.image 
+                image: fallbackImages[t.game]
               };
             }
           })
         );
+        
+        console.log('All images processed:', updated);
         setTournaments(updated);
         setFilteredTournaments(updated);
       } catch (error) {
@@ -156,12 +165,13 @@ export default function TournamentsPage() {
         // Use fallback images if API fails completely
         const updatedWithFallbacks = mockTournaments.map(t => ({
           ...t,
-          image: fallbackImages[t.game] || t.image
+          image: fallbackImages[t.game]
         }));
         setTournaments(updatedWithFallbacks);
         setFilteredTournaments(updatedWithFallbacks);
       } finally {
         setLoadingImages(false);
+        console.log('Image fetching completed');
       }
     }
     fetchImages();
@@ -366,22 +376,28 @@ export default function TournamentsPage() {
                 <div className="bg-gaming-darker rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 border border-gray-700 hover:border-gaming-primary">
                   {/* Tournament Image */}
                   <div className="relative h-48 bg-gradient-to-br from-gaming-primary/20 to-gaming-secondary/20">
-                    {loadingImages ? (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gaming-primary"></div>
-                      </div>
-                    ) : (
+                    {tournament.image ? (
                       <img 
                         src={tournament.image} 
                         alt={tournament.title}
                         className="absolute inset-0 w-full h-full object-cover"
                         onError={(e) => {
+                          console.log('Image failed to load:', tournament.image);
                           e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'block';
+                          // Show fallback gradient
+                          const fallback = e.target.parentElement.querySelector('.fallback-gradient');
+                          if (fallback) fallback.style.display = 'block';
+                        }}
+                        onLoad={() => {
+                          console.log('Image loaded successfully:', tournament.image);
                         }}
                       />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gaming-primary"></div>
+                      </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-br from-gaming-primary/20 to-gaming-secondary/20" style={{display: 'none'}}></div>
+                    <div className="fallback-gradient absolute inset-0 bg-gradient-to-br from-gaming-primary/20 to-gaming-secondary/20" style={{display: 'none'}}></div>
                     <div className="absolute inset-0 bg-black/30"></div>
                     <div className="absolute top-4 left-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${getStatusColor(tournament.status)}`}>
